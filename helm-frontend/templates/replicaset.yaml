@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend-replica
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    app: recipe
+    tier: frontend
+spec:
+  # modify replicas according to your case
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      # initContainers:
+      #   - name: init-myservice
+      #     image: busybox:1.28
+      #     command:
+      #       [
+      #         "sh",
+      #         "-c",
+      #         "until nslookup api.api.svc.cluster.local; do echo waiting for myservice; sleep 2; done;",
+      #       ]
+      containers:
+      - name: frontend
+        image: {{ .Values.replicaset.frontend_image }}
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 3000
+            hostPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        # env:
+        #   - name: REACT_APP_BACKEND_URL
+        #     valueFrom:
+        #       configMapKeyRef:
+        #         name: ui-config
+        #         key: backend_url
+
+        command: ["npm", "start"]
+      imagePullSecrets:
+      - name: myregistrykey
