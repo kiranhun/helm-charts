@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.namespace.name }}
 spec:
   selector:
-    tier: backend
+    tier: frontend
   type: LoadBalancer
   ports:
     - protocol: TCP

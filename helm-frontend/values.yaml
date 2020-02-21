@@ -11,6 +11,7 @@ namespace:
 replicaset:
   frontend_image: ""
   backend_url: ""
+  service_name: ""
 
 service: 
   type: LoadBalancer

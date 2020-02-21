@@ -18,19 +18,19 @@ spec:
       labels:
         tier: frontend
     spec:
-      # initContainers:
-      #   - name: init-myservice
-      #     image: busybox:1.28
-      #     command:
-      #       [
-      #         "sh",
-      #         "-c",
-      #         "until nslookup api.api.svc.cluster.local; do echo waiting for myservice; sleep 2; done;",
-      #       ]
+      initContainers:
+        - name: init-myservice
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup {{ .Values.replicaset.service_name }}.api.svc.cluster.local; do echo waiting for myservice; sleep 2; done;",
+            ]
       containers:
       - name: frontend
         image: {{ .Values.replicaset.frontend_image }}
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 3000
             hostPort: 3000
