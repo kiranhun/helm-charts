@@ -89,3 +89,9 @@ Expand service name.
 {{- define "helm-backend.databaseSecret" -}}
 {{- printf "%s-%s" (include "helm-backend.fullname" .) "api-secret" }}
 {{- end -}}
+{{/*
+Expand s3 name.
+*/}}
+{{- define "helm-backend.s3Secret" -}}
+{{- printf "%s-%s" (include "helm-backend.fullname" .) "s3-secret" }}
+{{- end -}}
