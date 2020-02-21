@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: {{ template "helm-backend.fullname" . }}
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    app: "{{ template "helm-backend.fullname" . }}"
+    tier: backend
+    release: {{ .Release.Name | quote }}
+
+spec:
+  # modify replicas according to your case
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: backend
+  template:
+    metadata:
+      labels:
+        tier: backend
+    spec:
+      containers:
+      - name: backend
+        image: {{ .Values.replicaset.backend_image }}
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8080
+            hostPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        env:
+        - name: MYSQL_HOST
+          valueFrom:
+              configMapKeyRef:
+                name: {{ template "helm-backend.databaseConfig" . }}
+                key: MYSQL_HOST
+        - name: MYSQL_USER
+          valueFrom:
+              secretKeyRef:
+                name: {{ template "helm-backend.databaseSecret" . }}
+                key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+              secretKeyRef:
+                name: {{ template "helm-backend.databaseSecret" . }}
+                key: MYSQL_PASSWORD
+      imagePullSecrets:
+        - name: {{ template "helm-backend.secret-name" . }}
