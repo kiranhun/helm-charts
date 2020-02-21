@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap 
+metadata:
+  name: {{ template "helm-frontend.backendConfig" . }}
+  labels:
+    app: "{{ template "helm-frontend.fullname" . }}"
+    release: {{ .Release.Name | quote }}
+data:
+# Configuration values can be set as key-value properties
+  backend_url : {{ .Values.replicaset.backend_url }}

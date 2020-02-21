@@ -6,19 +6,21 @@ replicaCount: 1
 
 namespace:
   type: Namespace
-  name: api2
+  name: ""
 
 replicaset:
-  frontend_image: veenaviyer/webapp-frontend:b85954ed3d7efc167b56c717b9fa0c7bc3310b5f
+  frontend_image: ""
+  backend_url: ""
 
 service: 
   type: LoadBalancer
   port: 3000
+  name: -service
 
 imageCredentials:
   registry: https://index.docker.io/v1/
-  username: veenaviyer
-  password: fd0848c9-aa7f-421a-a4d0-56117f45fe85
+  username: ""
+  password: ""
 
 image:
   repository: nginx

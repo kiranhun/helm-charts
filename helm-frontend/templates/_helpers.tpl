@@ -19,7 +19,7 @@ If release name contains chart name it will be used as a full name.
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" $name .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
@@ -61,6 +61,27 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
-{{- define "imagePullSecret" }}
+{{- define "imagePullSecret" -}}
 {{- printf "{\"auths\": {\"%s\": {\"auth\": \"%s\"}}}" .Values.imageCredentials.registry (printf "%s:%s" .Values.imageCredentials.username .Values.imageCredentials.password | b64enc) | b64enc }}
 {{- end }}
+
+{{/*
+Expand default docker secret name.
+*/}}
+{{- define "helm-frontend.secret-name" -}}
+{{- printf "%s-%s" (include "helm-frontend.fullname" .) "default-docker-secret" -}}
+{{- end -}}
+
+{{/*
+Expand service name.
+*/}}
+{{- define "helm-frontend.serviceName" -}}
+{{- printf "%s-%s" (include "helm-frontend.fullname" .) .Values.service.name }}
+{{- end -}}
+
+{{/*
+Expand service name.
+*/}}
+{{- define "helm-frontend.backendConfig" -}}
+{{- printf "%s-%s" (include "helm-frontend.fullname" .) "ui-config" }}
+{{- end -}}
