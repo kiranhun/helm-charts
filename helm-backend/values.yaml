@@ -1,4 +1,4 @@
-# Default values for helm-frontend.
+# Default values for helm-backend.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -9,13 +9,16 @@ namespace:
   name: ""
 
 replicaset:
-  frontend_image: ""
-  backend_url: ""
-  service_name: ""
+  backend_image: ""
+
+database:
+  url: ""
+  user: ""
+  password: ""
 
 service: 
   type: LoadBalancer
-  port: 3000
+  port: 8080
   name: -service
 
 imageCredentials:

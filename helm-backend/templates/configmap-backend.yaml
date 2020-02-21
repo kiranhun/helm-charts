@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "helm-backend.databaseConfig" . }}
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    app: "{{ template "helm-backend.fullname" . }}"
+    release: {{ .Release.Name | quote }}
+data:
+  # Configuration values can be set as key-value properties
+  MYSQL_HOST: {{ .Values.database.url }}
