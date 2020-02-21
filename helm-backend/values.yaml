@@ -15,11 +15,17 @@ database:
   url: ""
   user: ""
   password: ""
-
+  bucket_name: ""
+  
 service: 
   type: LoadBalancer
   port: 8080
-  name: -service
+  name: service
+  
+s3:
+  accesskey: ""
+  secretkey: ""
+
 
 imageCredentials:
   registry: https://index.docker.io/v1/

@@ -8,4 +8,5 @@ metadata:
     release: {{ .Release.Name | quote }}
 data:
   # Configuration values can be set as key-value properties
-  MYSQL_HOST: {{ .Values.database.url }}
+  MYSQL_HOST: "jdbc:mariadb://{{ .Values.database.url }}:3306/csye7374"
+  BUCKET_NAME: {{ .Values.database.bucket_name }}

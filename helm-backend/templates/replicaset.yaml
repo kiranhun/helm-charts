@@ -54,5 +54,20 @@ spec:
               secretKeyRef:
                 name: {{ template "helm-backend.databaseSecret" . }}
                 key: MYSQL_PASSWORD
+        - name: BUCKET_NAME
+          valueFrom:
+              configMapKeyRef:
+                name: {{ template "helm-backend.databaseConfig" . }}
+                key: BUCKET_NAME
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+              secretKeyRef:
+                name: {{ template "helm-backend.s3Secret" . }}
+                key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+              secretKeyRef:
+                name: {{ template "helm-backend.s3Secret" . }}
+                key: AWS_SECRET_ACCESS_KEY
       imagePullSecrets:
         - name: {{ template "helm-backend.secret-name" . }}

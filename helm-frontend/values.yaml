@@ -16,7 +16,7 @@ replicaset:
 service: 
   type: LoadBalancer
   port: 3000
-  name: -service
+  name: service
 
 imageCredentials:
   registry: https://index.docker.io/v1/
