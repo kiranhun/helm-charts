@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "helm-frontend.serviceName" . }}
+  namespace: {{ .Values.namespace.name }}
+spec:
+  selector:
+    tier: frontend
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      name: http

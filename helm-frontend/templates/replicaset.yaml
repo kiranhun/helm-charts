@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: {{ template "helm-frontend.fullname" . }}
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    tier: frontend
+    app: "{{ template "helm-frontend.fullname" . }}"
+    release: {{ .Release.Name | quote }}
+spec:
+  # modify replicas according to your case
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      initContainers:
+        - name: init-myservice
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup {{ .Values.replicaset.service_name }}.api.svc.cluster.local; do echo waiting for myservice; sleep 2; done;",
+            ]
+      containers:
+      - name: frontend
+        image: {{ .Values.replicaset.frontend_image }}
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 3000
+            hostPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        env:
+          - name: REACT_APP_BACKEND_URL
+            valueFrom:
+              configMapKeyRef:
+                name:  {{ template "helm-frontend.backendConfig" . }}
+                key: backend_url
+        command: ["npm", "start"]
+      imagePullSecrets:
+      - name: {{ template "helm-frontend.secret-name" . }}
