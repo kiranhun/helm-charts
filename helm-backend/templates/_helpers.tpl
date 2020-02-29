@@ -95,3 +95,9 @@ Expand s3 name.
 {{- define "helm-backend.s3Secret" -}}
 {{- printf "%s-%s" (include "helm-backend.fullname" .) "s3-secret" }}
 {{- end -}}
+{{/*
+Expand redis service name.
+*/}}
+{{- define "helm-backend.redis" -}}
+{{- printf "%s-%s" .Release.Name "redis-master" -}}
+{{- end -}}

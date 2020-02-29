@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ template "helm-backend.databaseConfig" . }}
-  namespace: {{ .Values.namespace.name }}
+  # namespace: {{ .Values.namespace.name }}
   labels:
     app: "{{ template "helm-backend.fullname" . }}"
     release: {{ .Release.Name | quote }}
@@ -10,3 +10,4 @@ data:
   # Configuration values can be set as key-value properties
   MYSQL_HOST: "jdbc:mariadb://{{ .Values.database.url }}:3306/csye7374"
   BUCKET_NAME: {{ .Values.database.bucket_name }}
+  REDIS_HOST: "{{ .Release.Name }}-redis.api"

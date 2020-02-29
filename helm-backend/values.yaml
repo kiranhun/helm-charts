@@ -40,6 +40,17 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+redis:
+  password: welcome12
+  sentinel:
+    enabled: true
+    usePassword: false
+  master:
+    readinessProbe:
+      failureThreshold: 3
+  cluster:
+    enabled: true
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
