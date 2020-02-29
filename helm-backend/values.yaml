@@ -45,6 +45,9 @@ redis:
   sentinel:
     enabled: true
     usePassword: false
+  master:
+    readinessProbe:
+      failureThreshold: 3
   cluster:
     enabled: true
 
