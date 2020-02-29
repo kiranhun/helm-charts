@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
   name: {{ template "helm-backend.fullname" . }}
-  namespace: {{ .Values.namespace.name }}
+  # namespace: {{ .Values.namespace.name }}
   labels:
     app: "{{ template "helm-backend.fullname" . }}"
     tier: backend
@@ -19,6 +19,15 @@ spec:
       labels:
         tier: backend
     spec:
+      initContainers:
+        - name: init-container
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup {{ .Release.Name }}-redis.api; do echo waiting for myservice; sleep 2; done;",
+            ]
       containers:
       - name: backend
         image: {{ .Values.replicaset.backend_image }}
@@ -34,16 +43,21 @@ spec:
           periodSeconds: 10
         livenessProbe:
           httpGet:
-            path: /health
+            path: /livenessCheck
             port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 10
+          initialDelaySeconds: 30
+          periodSeconds: 20
         env:
         - name: MYSQL_HOST
           valueFrom:
               configMapKeyRef:
                 name: {{ template "helm-backend.databaseConfig" . }}
                 key: MYSQL_HOST
+        - name: REDIS_HOST
+          valueFrom:
+              configMapKeyRef:
+                name: {{ template "helm-backend.databaseConfig" . }}
+                key: REDIS_HOST
         - name: MYSQL_USER
           valueFrom:
               secretKeyRef:
@@ -54,6 +68,11 @@ spec:
               secretKeyRef:
                 name: {{ template "helm-backend.databaseSecret" . }}
                 key: MYSQL_PASSWORD
+        - name: REDIS_PASSWORD
+          valueFrom:
+              secretKeyRef:
+                name: {{ template "helm-backend.databaseSecret" . }}
+                key: REDIS_PASSWORD
         - name: BUCKET_NAME
           valueFrom:
               configMapKeyRef:
