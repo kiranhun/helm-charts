@@ -1,7 +1,6 @@
 apiVersion: v2
 name: helm-backend
 description: A Helm chart for Kubernetes
-
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives
@@ -11,25 +10,22 @@ description: A Helm chart for Kubernetes
 # a dependency of application charts to inject those utilities and functions into the rendering
 # pipeline. Library charts do not define any templates and therefore cannot be deployed.
 type: application
-
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.1.0
-
+version: 0.1.1
 dependencies:
-  - name: redis        # from search results above
-    version: 10.5.5    # Also from the search results above
-    repository: https://kubernetes-charts.storage.googleapis.com
-
+- name: redis # from search results above
+  version: 10.5.5 # Also from the search results above
+  repository: https://kubernetes-charts.storage.googleapis.com
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
 appVersion: 1.16.0
 sources:
-  - https://github.com/advancecloud7374/helm-charts.git
+- https://github.com/advancecloud7374/helm-charts.git
 maintainers:
-  - name: Veena Iyer
-    email: iyer.v@husky.neu.edu
-  - name: Ravi Kiran
-    email: lnu.ra@husky.neu.edu
-  - name: Akash Katakam
-    email: katakam.a@husky.neu.edu
+- name: Veena Iyer
+  email: iyer.v@husky.neu.edu
+- name: Ravi Kiran
+  email: lnu.ra@husky.neu.edu
+- name: Akash Katakam
+  email: katakam.a@husky.neu.edu
