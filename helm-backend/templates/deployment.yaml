@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "helm-backend.fullname" . }}
+  # namespace: {{ .Values.namespace.name }}
+  labels:
+    app: "{{ template "helm-backend.fullname" . }}"
+    tier: backend
+    release: {{ .Release.Name | quote }}
+    version: {{ .Chart.Version | quote }}
+  annotations:
+    imageregistry: "https://hub.docker.com/"
+spec:
+  # modify replicas according to your case
+  replicas: 2
+  minReadySeconds: 15
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      tier: backend
+  template:
+    metadata:
+      labels:
+        tier: backend
+    spec:
+      initContainers:
+        - name: init-container
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup {{ .Release.Name }}-redis.api; do echo waiting for myservice; sleep 2; done;",
+            ]
+      containers:
+      - name: backend
+        image: "akashkatakam/webapp-backend:redisfinal"
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8080
+            hostPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /livenessCheck
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        env:
+        - name: MYSQL_HOST
+          valueFrom:
+              configMapKeyRef:
+                name: {{ template "helm-backend.databaseConfig" . }}
+                key: MYSQL_HOST
+        - name: REDIS_HOST
+          valueFrom:
+              configMapKeyRef:
+                name: {{ template "helm-backend.databaseConfig" . }}
+                key: REDIS_HOST
+        - name: MYSQL_USER
+          valueFrom:
+              secretKeyRef:
+                name: {{ template "helm-backend.databaseSecret" . }}
+                key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+              secretKeyRef:
+                name: {{ template "helm-backend.databaseSecret" . }}
+                key: MYSQL_PASSWORD
+        - name: REDIS_PASSWORD
+          valueFrom:
+              secretKeyRef:
+                name: {{ template "helm-backend.databaseSecret" . }}
+                key: REDIS_PASSWORD
+        - name: BUCKET_NAME
+          valueFrom:
+              configMapKeyRef:
+                name: {{ template "helm-backend.databaseConfig" . }}
+                key: BUCKET_NAME
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+              secretKeyRef:
+                name: {{ template "helm-backend.s3Secret" . }}
+                key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+              secretKeyRef:
+                name: {{ template "helm-backend.s3Secret" . }}
+                key: AWS_SECRET_ACCESS_KEY
+      imagePullSecrets:
+        - name: {{ template "helm-backend.secret-name" . }}
