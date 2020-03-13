@@ -38,7 +38,7 @@ spec:
             ]
       containers:
       - name: backend
-        image: {{ .Values.replicaset.backend_image }}
+        image: {{ .Values.backend_image }}
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080
