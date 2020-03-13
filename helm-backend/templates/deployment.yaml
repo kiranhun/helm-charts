@@ -38,7 +38,7 @@ spec:
             ]
       containers:
       - name: backend
-        image: "akashkatakam/webapp-backend:redisfinal"
+        image: {{ .Values.replicaset.backend_image }}
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080
