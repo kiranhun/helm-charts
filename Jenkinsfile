@@ -39,13 +39,14 @@ stage('Deployment_Frontend') {
                 script {
                     sh "pwd"
                     withKubeConfig([credentialsId: 'kubernetesCreds', serverUrl: '${url}']){
+                        def BACKEND_ENDPOINT = sh(returnStdout: true, script: "kubectl get svc helm-backend-${version}-service -n api -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'")
                         sh"""
                             env
                             kubectl create namespace ui > /dev/null 2>&1 || true
                             cd helm-frontend
-                            def BACKEND_ENDPOINT = sh(returnStdout: true, script: "kubectl get svc helm-backend-${version}-service -n api -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'")
+                            echo ${BACKEND_ENDPOINT}
                             sudo su
-                            helm upgrade '${frontend_version}' . --install --set namespace.name=ui --set imageCredentials.username='${DOCKER_USER}' --set imageCredentials.password='${DOCKER_PASS}' --set replicaset.service_name=helm-backend-${version}-service --set backend_url=${BACKEND_ENDPOINT} -n ui
+                            helm upgrade '${frontend_version}' . --install --set namespace.name=ui --set imageCredentials.username='${DOCKER_USER}' --set imageCredentials.password='${DOCKER_PASS}' --set replicaset.service_name=helm-backend-${version}-service --set replicaset.backend_url=${BACKEND_ENDPOINT} -n ui
                         """
                     }
                 }
