@@ -13,6 +13,8 @@ replicaset:
   backend_url: ""
   service_name: ""
 
+frontend_image: ""
+
 service: 
   type: LoadBalancer
   port: 3000

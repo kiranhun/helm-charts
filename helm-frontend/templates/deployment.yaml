@@ -1,8 +1,8 @@
 apiVersion: apps/v1
-kind: ReplicaSet
+kind: Deployment
 metadata:
   name: {{ template "helm-frontend.fullname" . }}
-  namespace: {{ .Values.namespace.name }}
+  #namespace: {{ .Values.namespace.name }}
   labels:
     tier: frontend
     app: "{{ template "helm-frontend.fullname" . }}"
@@ -10,6 +10,11 @@ metadata:
 spec:
   # modify replicas according to your case
   replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
   selector:
     matchLabels:
       tier: frontend
@@ -29,7 +34,7 @@ spec:
             ]
       containers:
       - name: frontend
-        image: {{ .Values.replicaset.frontend_image }}
+        image: {{ .Values.frontend_image }}
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 3000
