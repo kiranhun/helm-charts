@@ -19,7 +19,7 @@ pipeline {
                             kubectl create namespace api > /dev/null 2>&1 || true
                             cd helm-backend
                             sudo su
-                            helm upgrade '${version}' .  --install --set database.url='${database}' --set database.user='${database_user}' --set database.password='${database_password}' --set namespace.name=api --set imageCredentials.username='${DOCKER_USER}' --set imageCredentials.password='${DOCKER_PASS}' --set database.bucket_name='${bucket}' --set s3.accesskey='${accessKey}' --set s3.secretkey='${secretKey}' -n api
+                            helm upgrade '${version}' .  --install  --wait --set database.url='${database}' --set database.user='${database_user}' --set database.password='${database_password}' --set namespace.name=api --set imageCredentials.username='${DOCKER_USER}' --set imageCredentials.password='${DOCKER_PASS}' --set database.bucket_name='${bucket}' --set s3.accesskey='${accessKey}' --set s3.secretkey='${secretKey}' -n api
                         """
                     }
                 }
