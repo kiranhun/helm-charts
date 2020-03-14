@@ -10,7 +10,7 @@ replicaset:
   frontend_image: ""
   backend_url: ""
   service_name: ""
-frontend_image: kiranhun/webapp-frontend:290c80c507c0d8b51a24a6bc7d0eb365226de28a
+frontend_image: kiranhun/webapp-frontend:2fe9eafe0cf022650add64c0740a0f5b0a2d9884
 service:
   type: LoadBalancer
   port: 3000
