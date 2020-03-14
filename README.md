@@ -36,7 +36,7 @@ helm install v1 helm-backend/
 helm install v5 helm-frontend/ --set namespace.name=<NS created>,replicaset.frontend_image=<DOCKERIMAGE>,
 imageCredentials.username=<DOCKER username> ,imageCredentials.password=<DOCKER password> ,replicaset.service_name=<BACKEND SERVICE NAME>,replicaset.backend_url=<BACKEND URL>
 ```
-### Cleanup
+### Cleanup 
 
 Delete the helm chart
 ```sh
