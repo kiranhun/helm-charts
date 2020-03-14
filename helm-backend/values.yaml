@@ -89,4 +89,4 @@ resources: {}
 nodeSelector: {}
 tolerations: []
 affinity: {}
-backend_image: kiranhun/webapp-backend:2d8595e13774a57923a2867e58061c799a647515
+backend_image: kiranhun/webapp-backend:33f9a5853777733c30073883110737dac1f36c98
