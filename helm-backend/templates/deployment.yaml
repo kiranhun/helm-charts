@@ -10,6 +10,8 @@ metadata:
     version: {{ .Chart.Version | quote }}
   annotations:
     imageregistry: "https://hub.docker.com/"
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
 spec:
   # modify replicas according to your case
   replicas: 2
