@@ -13,7 +13,7 @@ replicaset:
   backend_url: ""
   service_name: ""
 
-frontend_image: ""
+frontend_image: kiranhun/webapp-frontend:9ea6ec2322c5907de778a2a6d6a734bdb4a7e120
 
 service: 
   type: LoadBalancer

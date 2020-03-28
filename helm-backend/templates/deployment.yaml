@@ -38,6 +38,9 @@ spec:
             ]
       containers:
       - name: backend
+        resources:
+          requests:
+            memory: 1024Mi
         image: {{ .Values.backend_image }}
         imagePullPolicy: IfNotPresent
         ports:
