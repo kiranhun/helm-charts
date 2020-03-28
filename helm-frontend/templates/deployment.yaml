@@ -34,6 +34,11 @@ spec:
             ]
       containers:
       - name: frontend
+        resources:
+          requests:
+            cpu: 0.3
+          limit: 
+            cpu: 0.7
         image: {{ .Values.frontend_image }}
         imagePullPolicy: IfNotPresent
         ports:

@@ -40,7 +40,9 @@ spec:
       - name: backend
         resources:
           requests:
-            memory: 1024Mi
+            cpu: 0.3
+          limit: 
+            cpu: 0.7
         image: {{ .Values.backend_image }}
         imagePullPolicy: IfNotPresent
         ports:
@@ -56,8 +58,8 @@ spec:
           httpGet:
             path: /livenessCheck
             port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 10
+          initialDelaySeconds: 20
+          periodSeconds: 30
         env:
         - name: MYSQL_HOST
           valueFrom:
